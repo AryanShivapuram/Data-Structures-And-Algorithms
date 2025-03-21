@@ -1,0 +1,38 @@
+class Solution {
+  public:
+    vector<int> topologicalSort(vector<vector<int>>& adj) {
+        vector<int> ans;
+        vector<int> inDegree(adj.size(), 0);
+        queue<int> q;
+
+        // Compute in-degree of each node
+        for (int i = 0; i < adj.size(); i++) {
+            for (int j = 0; j < adj[i].size(); j++) {
+                inDegree[adj[i][j]]++; // Fix: Increment in-degree of the correct node
+            }
+        }
+
+        // Push nodes with in-degree 0 to queue
+        for (int i = 0; i < adj.size(); i++) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        // Process nodes in topological order
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+            ans.push_back(curr);
+
+            for (int i = 0; i < adj[curr].size(); i++) {
+                inDegree[adj[curr][i]]--;
+                if (inDegree[adj[curr][i]] == 0) {
+                    q.push(adj[curr][i]);
+                }
+            }
+        }
+
+        return ans;
+    }
+};
